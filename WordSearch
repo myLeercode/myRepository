@@ -1,0 +1,66 @@
+/**
+ * Word Search
+ */
+
+public class Solution {
+	// recursion
+	public boolean exist(char[][] board, String word) {
+		//验证
+		if (board == null || board.length == 0)
+			return false;
+		//空单词返回真
+		if (word.length() == 0)
+			return true;
+
+		//字版行数遍历开始i
+		for (int i = 0; i < board.length; i++) {
+			//单词列数遍历j
+			for (int j = 0; j < board[0].length; j++) {
+				//找到第一个匹配字符后递归开始
+				if (board[i][j] == word.charAt(0)) {
+					//递归开始
+					boolean rst = find(board, i, j, word, 0);
+					if (rst)
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 匹配单词（递归）
+	 * @param board
+	 *        字板
+	 * @param i
+	 *        行数
+	 * @param j
+	 *        列数
+	 * @param word
+	 *        目标单词
+	 * @param start
+	 *        层数
+	 * @return
+	 */
+	private boolean find(char[][] board, int i, int j, String word, int start) {
+		//目前单词长度等于层数时递归正常结束
+		if (start == word.length())
+			return true;
+
+		//超出边界或字符不匹配时，返回异常
+		if (i < 0 || i >= board.length || j < 0 || j >= board[0].length
+				|| board[i][j] != word.charAt(start)) {
+			return false;
+		}
+
+		//字符匹配时，占位，并向周围展开
+		board[i][j] = '#'; // should remember to mark it
+		boolean rst = find(board, i - 1, j, word, start + 1)
+				|| find(board, i, j - 1, word, start + 1)
+				|| find(board, i + 1, j, word, start + 1)
+				|| find(board, i, j + 1, word, start + 1);
+		//递归结束，还原
+		board[i][j] = word.charAt(start);
+		return rst;
+	}
+}
